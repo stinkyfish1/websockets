@@ -18,17 +18,13 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // Example: Generate a random number between 1 and 100
         const id = getRandomInt(1, 1000);
-
-
-
-        // Use the current host (works across devices)
         const socket = new WebSocket(`ws://${window.location.host}/ws/${id}`);
         console.log(`Connecting to: ws://${window.location.host}/ws/${id}`);
 
+        const inputText = document.getElementById("inputText");
+        const submitButton = document.getElementById("submitButton");
 
-        // Function to display messages on the web page
         function showMessage(message) {
             const messageContainer = document.getElementById('container');
             const messageElement = document.createElement('div');
@@ -36,29 +32,34 @@
             messageContainer.appendChild(messageElement);
         }
 
-        // Event handler for when the connection is established
-        socket.addEventListener('open', (event) => {
+        socket.addEventListener('open', () => {
             showMessage('Connected to server.');
         });
 
-        // Event handler for receiving messages from the server
         socket.onmessage = (event) => {
-            showMessage(event.data)
-        }
+            showMessage(event.data);
+        };
 
-        // Event handler for when the connection is closed
-        socket.addEventListener('close', (event) => {
+        socket.addEventListener('close', () => {
             showMessage('Connection closed.');
         });
 
-        const inputText = document.getElementById("inputText");
-        const submitButton = document.getElementById("submitButton");
+        function sendMessage() {
+            const inputValue = inputText.value.trim();
+            if (inputValue !== "") {
+                socket.send(inputValue);
+                inputText.value = ""; // ✅ Clear input field after sending
+            }
+        }
 
-        submitButton.addEventListener("click", function () {
-            const inputValue = inputText.value;
-            socket.send(inputValue)
+        submitButton.addEventListener("click", sendMessage);
+
+        // ✅ Enable Enter key to send
+        inputText.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
         });
-
     </script>
 </body>
 
