@@ -1,0 +1,2 @@
+[2025-06-03 09:33:48] Klient 502 sendte mistenkelig melding: faen
+[2025-06-03 09:33:55] Klient 502 sendte mistenkelig melding: <script>
